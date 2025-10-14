@@ -1,3 +1,6 @@
 [submodule "coremark"]
 	path = coremark
 	url = git@github.com:eembc/coremark.git
+[submodule "dhrystone"]
+	path = dhrystone
+	url = git@github.com:pandabon/concorde-dhrystone.git
