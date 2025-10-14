@@ -1,0 +1,3 @@
+[submodule "coremark"]
+	path = coremark
+	url = git@github.com:eembc/coremark.git
