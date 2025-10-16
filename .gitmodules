@@ -7,3 +7,6 @@
 [submodule "libevent"]
 	path = libevent
 	url = git@github.com:libevent/libevent.git
+[submodule "memcached"]
+	path = memcached
+	url = git@github.com:memcached/memcached.git
