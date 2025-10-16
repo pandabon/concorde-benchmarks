@@ -4,3 +4,6 @@
 [submodule "dhrystone"]
 	path = dhrystone
 	url = git@github.com:pandabon/concorde-dhrystone.git
+[submodule "libevent"]
+	path = libevent
+	url = git@github.com:libevent/libevent.git
