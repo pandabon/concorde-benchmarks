@@ -5,6 +5,7 @@ DEPS_DIR ?= deps
 
 BUILD_TARGETS := build/dhrystone \
 				 build/coremark \
+				 build/libevent \
 				 build/memcached
 
 $(BUILD_TARGETS): | init
@@ -53,7 +54,7 @@ clean/coremark:
 build/libevent:
 	cd $(DEPS_DIR)/libevent && \
 	./autogen.sh && \
-	./configure --prefix=$(shell pwd)/build && \
+	./configure --prefix=$(pwd)/build && \
 	make && \
 	make install
 
