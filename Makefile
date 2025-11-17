@@ -1,16 +1,23 @@
 JOBS ?= $(shell nproc 2>/dev/null || echo 1)
 GIT ?= git
-DEPS_DIR ?= deps
-# PREFIX ?= build
+DEPS_DIR ?= $(CURDIR)/deps
+BUILD_DIR ?= $(CURDIR)/build
 
-BUILD_TARGETS := build/dhrystone \
-				 build/coremark \
-				 build/libevent \
-				 build/memcached
+# Stamp files to track build completion
+BUILD_TARGETS := $(BUILD_DIR)/.dhrystone \
+                 $(BUILD_DIR)/.coremark \
+                 $(BUILD_DIR)/.libevent \
+                 $(BUILD_DIR)/.memcached
 
-$(BUILD_TARGETS): | init
+$(BUILD_TARGETS): | init $(BUILD_DIR)
 
-.PHONY: clean help
+.PHONY: clean help init deinit
+.PHONY: build/dhrystone run/dhrystone clean/dhrystone
+.PHONY: build/coremark clean/coremark
+.PHONY: build/libevent build/memcached run/memcached
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
 init:
 	@if git submodule status | grep --quiet '^-'; then \
@@ -22,49 +29,62 @@ deinit:
 	$(GIT) submodule deinit --all -f
 
 clean: clean/dhrystone clean/coremark
+	rm -rf $(BUILD_DIR)
 
 ###########################################################
 # dhrystone
 ###########################################################
-# params: ITERS, HZ
-
-build/dhrystone:
+$(BUILD_DIR)/.dhrystone:
 	cd dhrystone && $(MAKE) build
+	@touch $@
 
-run/dhrystone: build/dhrystone
+build/dhrystone: $(BUILD_DIR)/.dhrystone
+
+run/dhrystone: | build/dhrystone
 	cd dhrystone && $(MAKE) run
 
 clean/dhrystone:
 	cd dhrystone && $(MAKE) clean
+	rm -f $(BUILD_DIR)/.dhrystone
 
 ###########################################################
 # coremark
 ###########################################################
-# params: ITERATIONS
-
-build/coremark:
+$(BUILD_DIR)/.coremark:
 	cd coremark && $(MAKE)
+	@touch $@
+
+build/coremark: $(BUILD_DIR)/.coremark
+
+run/coremark: build/coremark
 
 clean/coremark:
-	cd dhrystone && $(MAKE) clean
+	cd coremark && $(MAKE) clean
+	rm -f $(BUILD_DIR)/.coremark
 
 ###########################################################
 # memcached
 ###########################################################
-build/libevent:
+$(BUILD_DIR)/.libevent:
 	cd $(DEPS_DIR)/libevent && \
 	./autogen.sh && \
-	./configure --prefix=$(pwd)/build && \
+	./configure --prefix=$$(pwd)/build && \
 	make && \
 	make install
+	@touch $@
 
-build/memcached: build/libevent
+build/libevent: $(BUILD_DIR)/.libevent
+
+$(BUILD_DIR)/.memcached: $(BUILD_DIR)/.libevent
 	cd memcached && \
 	./autogen.sh && \
 	./configure --with-libevent=$(DEPS_DIR)/libevent/build/ && \
 	make
+	@touch $@
 
-run/memcached: build/memcached
+build/memcached: $(BUILD_DIR)/.memcached
+
+run/memcached: | build/memcached
 	cd memcached && \
 	make test
 
