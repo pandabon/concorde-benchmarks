@@ -7,7 +7,9 @@ BUILD_DIR ?= $(CURDIR)/build
 BUILD_TARGETS := $(BUILD_DIR)/.dhrystone \
                  $(BUILD_DIR)/.coremark \
                  $(BUILD_DIR)/.libevent \
-                 $(BUILD_DIR)/.memcached
+                 $(BUILD_DIR)/.memcached \
+                 $(BUILD_DIR)/.sieve \
+                 $(BUILD_DIR)/.towers
 
 $(BUILD_TARGETS): | init $(BUILD_DIR)
 
@@ -15,6 +17,8 @@ $(BUILD_TARGETS): | init $(BUILD_DIR)
 .PHONY: build/dhrystone run/dhrystone clean/dhrystone
 .PHONY: build/coremark clean/coremark
 .PHONY: build/libevent build/memcached run/memcached
+.PHONY: build/sieve run/sieve clean/sieve
+.PHONY: build/towers run/towers clean/towers
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -28,7 +32,7 @@ init:
 deinit:
 	$(GIT) submodule deinit --all -f
 
-clean: clean/dhrystone clean/coremark
+clean: clean/dhrystone clean/coremark clean/sieve clean/towers
 	rm -rf $(BUILD_DIR)
 
 ###########################################################
@@ -88,6 +92,38 @@ run/memcached: | build/memcached
 	cd memcached && \
 	make test
 
+
+###########################################################
+# sieve
+###########################################################
+$(BUILD_DIR)/.sieve:
+	cd sieve && $(MAKE) build
+	@touch $@
+
+build/sieve: $(BUILD_DIR)/.sieve
+
+run/sieve: | build/sieve
+	cd sieve && $(MAKE) run
+
+clean/sieve:
+	cd sieve && $(MAKE) clean
+	rm -f $(BUILD_DIR)/.sieve
+
+###########################################################
+# towers
+###########################################################
+$(BUILD_DIR)/.towers:
+	cd towers && $(MAKE) build
+	@touch $@
+
+build/towers: $(BUILD_DIR)/.towers
+
+run/towers: | build/towers
+	cd towers && $(MAKE) run
+
+clean/towers:
+	cd towers && $(MAKE) clean
+	rm -f $(BUILD_DIR)/.towers
 
 ###########################################################
 # dcperf
