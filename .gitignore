@@ -1,0 +1,10 @@
+# Build directories
+build/*
+build-deps/*
+
+# Built executables
+collatz/collatz
+sieve/sieve
+sparse/sparse
+towers/towers
+branch_storm/branch_storm
