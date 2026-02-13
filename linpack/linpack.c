@@ -104,9 +104,9 @@ int main(void)
     printf("Array size %d X %d.\n",arsize,arsize);
     printf("Memory required:  %ldK.\n",(memreq+512L)>>10);
     printf("Average rolled and unrolled performance:\n\n");
-    printf("    Reps Time(s) DGEFA   DGESL  OVERHEAD    KFLOPS\n");
+    printf("    Reps Time(ms) DGEFA   DGESL  OVERHEAD    KFLOPS\n");
     printf("----------------------------------------------------\n");
-    nreps=1<<15;
+    nreps=1<<6;
     // while (linpack(nreps,arsize)<10.)
     //     nreps*=2;
     linpack(nreps,arsize);
@@ -166,7 +166,7 @@ static REAL linpack(long nreps,int arsize)
     if (toverhead<0.)
         toverhead=0.;
     printf("%8ld %6.2f %6.2f%% %6.2f%% %6.2f%%  %9.3f\n",
-            nreps,totalt,100.*tdgefa/totalt,
+            nreps,totalt*1000,100.*tdgefa/totalt,
             100.*tdgesl/totalt,100.*toverhead/totalt,
             kflops);
     return(totalt);
