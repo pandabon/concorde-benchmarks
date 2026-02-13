@@ -12,7 +12,8 @@ BUILD_TARGETS := $(BUILD_DIR)/dhrystone \
                  $(BUILD_DIR)/branch_storm \
                  $(BUILD_DIR)/collatz \
                  $(BUILD_DIR)/sparse \
-				 $(BUILD_DIR)/whetstone
+				 $(BUILD_DIR)/whetstone \
+				 $(BUILD_DIR)/linpack
                 #  $(BUILD_DIR)/coremark \
                 #  $(BUILD_DIR)/memcached \
 
@@ -31,6 +32,7 @@ build/all: $(BUILD_TARGETS)
 .PHONY: build/collatz run/collatz clean/collatz
 .PHONY: build/sparse run/sparse clean/sparse
 .PHONY: build/whetstone run/whetstone clean/whetstone
+.PHONY: build/linpack run/linpack clean/linpack
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -47,7 +49,7 @@ init:
 deinit:
 	$(GIT) submodule deinit --all -f
 
-clean: clean/dhrystone clean/sieve clean/towers clean/branch_storm clean/collatz clean/sparse clean/whetstone
+clean: clean/dhrystone clean/sieve clean/towers clean/branch_storm clean/collatz clean/sparse clean/whetstone clean/linpack
 	rm -rf $(BUILD_DIR) $(BUILD_DEPS_DIR)
 
 ###########################################################
@@ -199,3 +201,23 @@ build/whetstone: $(BUILD_DIR)/whetstone
 
 run/whetstone: | build/whetstone
 	cd whetstone && $(MAKE) run
+
+clean/whetstone:
+	cd whetstone && $(MAKE) clean
+	rm -f $(BUILD_DIR)/whetstone
+
+###########################################################
+# linpack
+###########################################################
+$(BUILD_DIR)/linpack: linpack/Makefile linpack/linpack.c
+	cd linpack && $(MAKE) build
+	cp linpack/linpack $(BUILD_DIR)/
+
+build/linpack: $(BUILD_DIR)/linpack
+
+run/linpack: | build/linpack
+	cd linpack && $(MAKE) run
+
+clean/linpack:
+	cd linpack && $(MAKE) clean
+	rm -f $(BUILD_DIR)/linpack
