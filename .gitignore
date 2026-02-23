@@ -9,6 +9,12 @@ branch_storm/branch_storm-gem5
 collatz/collatz
 collatz/collatz-pin
 collatz/collatz-gem5
+dhrystone/dhrystone
+dhrystone/dhrystone-pin
+dhrystone/dhrystone-gem5
+dhrystone/*.i
+dhrystone/*.o
+dhrystone/*.s
 linpack/linpack
 linpack/linpack-pin
 linpack/linpack-gem5
