@@ -3,8 +3,24 @@ build/*
 build-deps/*
 
 # Built executables
-collatz/collatz
-sieve/sieve
-sparse/sparse
-towers/towers
 branch_storm/branch_storm
+branch_storm/branch_storm-pin
+branch_storm/branch_storm-gem5
+collatz/collatz
+collatz/collatz-pin
+collatz/collatz-gem5
+linpack/linpack
+linpack/linpack-pin
+linpack/linpack-gem5
+sieve/sieve
+sieve/sieve-pin
+sieve/sieve-gem5
+sparse/sparse
+sparse/sparse-pin
+sparse/sparse-gem5
+towers/towers
+towers/towers-pin
+towers/towers-gem5
+whetstone/whetstone
+whetstone/whetstone-pin
+whetstone/whetstone-gem5

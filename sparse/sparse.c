@@ -1,9 +1,14 @@
 #include <stdio.h>
 
-/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+#ifdef PIN
 static volatile int trace_region_marker __attribute__((unused));
 void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
 void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+#endif
+
+#ifdef GEM5
+#include "gem5/m5ops.h"
+#endif
 
 // Define the cache line size (usually 64 bytes on x86/ARM)
 #define CACHE_LINE_SIZE 64
@@ -38,13 +43,22 @@ void stress_icache() {
 }
 
 int main() {
+#ifdef PIN
     start_trace();
+#endif
+#ifdef GEM5
+    m5_work_begin(0,0);
+#endif
     // We don't need many iterations because the cache misses 
     // will make this incredibly slow.
     for (int i = 0; i < 100; i++) {
         stress_icache();
     }
+#ifdef GEM5
+    m5_work_end(0,0);
+#endif
+#ifdef PIN
     end_trace();
-    
+#endif
     return 0;
 }

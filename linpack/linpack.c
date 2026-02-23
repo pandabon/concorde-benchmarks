@@ -78,17 +78,27 @@ static REAL second   (void);
 
 static void *mempool;
 
-/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+#ifdef PIN
 static volatile int trace_region_marker __attribute__((unused));
 void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
 void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+#endif
+
+#ifdef GEM5
+#include "gem5/m5ops.h"
+#endif
 
 #define ARSIZE 32
 
 int main(void)
 
     {
+#ifdef PIN
     start_trace();
+#endif
+#ifdef GEM5
+    m5_work_begin(0,0);
+#endif
     int     arsize = ARSIZE;
     long    arsize2d,nreps;
     size_t  malloc_arg;
@@ -117,7 +127,12 @@ int main(void)
     linpack(nreps,arsize);
     free(mempool);
     printf("\n");
+#ifdef GEM5
+    m5_work_end(0,0);
+#endif
+#ifdef PIN
     end_trace();
+#endif
     return 0;
     }
 

@@ -17,6 +17,16 @@
 // system calls so printf's can only be used on a host system, not on the
 // smips processor simulator itself. 
 
+#ifdef PIN
+/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+#endif
+
+#ifdef GEM5
+#include "gem5/m5ops.h"
+#endif
 
 // This is the number of discs in the puzzle.
 
@@ -243,16 +253,16 @@ int towers_verify( struct Towers* this )
   return 0;
 }
 
-static volatile int trace_region_marker __attribute__((unused));
-
-void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
-void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
-
 // Main
 
 int main( int argc, char* argv[] )
 {
+#ifdef PIN
   start_trace();
+#endif
+#ifdef GEM5
+  m5_work_begin(0,0);
+#endif
   struct Towers towers;
   int i;
 
@@ -289,7 +299,12 @@ int main( int argc, char* argv[] )
 
 // Check the results
   int result = towers_verify( &towers );
+#ifdef GEM5
+  m5_work_end(0,0);
+#endif
+#ifdef PIN
   end_trace();
+#endif
   return result;
 }
 

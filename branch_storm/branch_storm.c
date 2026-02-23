@@ -2,15 +2,20 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef PIN
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+#endif
+
+#ifdef GEM5
+#include "gem5/m5ops.h"
+#endif
+
 // Volatile prevents the compiler from optimizing variables into registers
 // or assuming their values are constant.
 volatile int sink = 0;
 volatile int trigger = 0;
-
-// Trace region markers (instrumented by Pin to enable/disable tracing).
-static volatile int trace_region_marker __attribute__((unused));
-void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
-void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 
 // A simple Linear Congruential Generator for pseudo-randomness
 // to defeat the CPU branch predictor.
@@ -57,7 +62,12 @@ void heavy_branching() {
 }
 
 int main(int argc, char *argv[]) {
+#ifdef PIN
     start_trace();
+#endif
+#ifdef GEM5
+    m5_work_begin(0,0);
+#endif
     // Seed based on time to ensure runtime unpredictability
     lcg_seed = time(NULL);
     
@@ -81,7 +91,11 @@ int main(int argc, char *argv[]) {
     
     printf("Finished. Sink value: %d (preventing optimization)\n", sink);
     printf("Time: %f seconds\n", time_spent);
-    
+#ifdef GEM5
+    m5_work_end(0,0);
+#endif
+#ifdef PIN
     end_trace();
+#endif
     return 0;
 }
