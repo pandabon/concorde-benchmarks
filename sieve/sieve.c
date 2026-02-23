@@ -4,7 +4,13 @@
 
 #define N 10000
 
+/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+
 int main(int argc, char* argv[]) {
+    start_trace();
     
     int n = N;
 
@@ -40,6 +46,7 @@ int main(int argc, char* argv[]) {
     
     free(marked);
     printf("Number of prime numbers below %d: %d\n", n, prime_count);
-
+    
+    end_trace();
     return 0;
 }

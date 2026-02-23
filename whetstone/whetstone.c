@@ -77,6 +77,11 @@ void P0(void);
 void P3(double X, double Y, double *Z);
 #define USAGE	"usage: whetdc [-c] [loops]\n"
 
+/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+
 /*
 	COMMON T,T1,T2,E1(4),J,K,L
 */
@@ -86,6 +91,7 @@ int J,K,L;
 int
 main(int argc, char *argv[])
 {
+    start_trace();
 	/* used in the FORTRAN version */
 	long I;
 	long N1, N2, N3, N4, N6, N7, N8, N9, N10, N11;
@@ -387,6 +393,7 @@ C--------------------------------------------------------------------
 	if (continuous)
 		goto LCONT;
 
+	end_trace();
 	return(0);
 }
 

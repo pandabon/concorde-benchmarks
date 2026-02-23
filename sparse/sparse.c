@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+
 // Define the cache line size (usually 64 bytes on x86/ARM)
 #define CACHE_LINE_SIZE 64
 
@@ -33,11 +38,13 @@ void stress_icache() {
 }
 
 int main() {
+    start_trace();
     // We don't need many iterations because the cache misses 
     // will make this incredibly slow.
     for (int i = 0; i < 100; i++) {
         stress_icache();
     }
+    end_trace();
     
     return 0;
 }

@@ -243,11 +243,16 @@ int towers_verify( struct Towers* this )
   return 0;
 }
 
-//--------------------------------------------------------------------------
+static volatile int trace_region_marker __attribute__((unused));
+
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+
 // Main
 
 int main( int argc, char* argv[] )
 {
+  start_trace();
   struct Towers towers;
   int i;
 
@@ -282,7 +287,9 @@ int main( int argc, char* argv[] )
   towers_print( &towers );
 #endif
 
-  // Check the results
-  return towers_verify( &towers );
+// Check the results
+  int result = towers_verify( &towers );
+  end_trace();
+  return result;
 }
 

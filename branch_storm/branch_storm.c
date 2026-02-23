@@ -7,6 +7,11 @@
 volatile int sink = 0;
 volatile int trigger = 0;
 
+// Trace region markers (instrumented by Pin to enable/disable tracing).
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
+
 // A simple Linear Congruential Generator for pseudo-randomness
 // to defeat the CPU branch predictor.
 unsigned int lcg_seed = 0;
@@ -52,6 +57,7 @@ void heavy_branching() {
 }
 
 int main(int argc, char *argv[]) {
+    start_trace();
     // Seed based on time to ensure runtime unpredictability
     lcg_seed = time(NULL);
     
@@ -69,12 +75,13 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < 1000; i++) {
         heavy_branching();
     }
-
+    
     clock_t end = clock();
     double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-
+    
     printf("Finished. Sink value: %d (preventing optimization)\n", sink);
     printf("Time: %f seconds\n", time_spent);
-
+    
+    end_trace();
     return 0;
 }

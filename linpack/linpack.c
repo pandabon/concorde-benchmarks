@@ -78,12 +78,17 @@ static REAL second   (void);
 
 static void *mempool;
 
+/* Trace region markers (instrumented by Pin to enable/disable tracing). */
+static volatile int trace_region_marker __attribute__((unused));
+void __attribute__((noinline)) start_trace(void) { trace_region_marker = 1; }
+void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 
 #define ARSIZE 32
 
 int main(void)
 
     {
+    start_trace();
     int     arsize = ARSIZE;
     long    arsize2d,nreps;
     size_t  malloc_arg;
@@ -112,6 +117,7 @@ int main(void)
     linpack(nreps,arsize);
     free(mempool);
     printf("\n");
+    end_trace();
     return 0;
     }
 
