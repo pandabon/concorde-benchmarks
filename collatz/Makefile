@@ -11,7 +11,7 @@ GEM5_OPTS = -I$(GEM5_INCLUDE) -DGEM5
 GEM5_LDFLAGS = $(GEM5_LIB)
 
 CC ?= gcc
-CFLAGS ?= -O1 -mno-sse -mno-avx -fno-tree-vectorize --static
+CFLAGS ?= -O1 -mno-sse -mno-avx -fno-tree-vectorize
 LDFLAGS ?=
 
 collatz_bin = collatz
