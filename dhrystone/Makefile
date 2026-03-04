@@ -14,7 +14,7 @@ SRC = dhry_1.c dhry_2.c
 HDR = dhry.h
 
 CC ?= gcc
-CFLAGS ?= -O3
+CFLAGS ?= -O3 -mno-sse -mno-avx -fno-tree-vectorize
 LDFLAGS ?=
 
 # build: plain host binary; build-pin: dhrystone-pin; build-gem5: dhrystone-gem5
