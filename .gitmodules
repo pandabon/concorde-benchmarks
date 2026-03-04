@@ -1,9 +1,0 @@
-[submodule "coremark"]
-	path = coremark
-	url = git@github.com:eembc/coremark.git
-[submodule "libevent"]
-	path = deps/libevent
-	url = git@github.com:libevent/libevent.git
-[submodule "memcached"]
-	path = memcached
-	url = git@github.com:memcached/memcached.git

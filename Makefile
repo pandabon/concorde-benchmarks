@@ -4,7 +4,7 @@ DEPS_DIR ?= $(CURDIR)/deps
 BUILD_DIR ?= $(CURDIR)/build
 BUILD_DEPS_DIR ?= $(CURDIR)/build-deps
 
-# Build outputs: executables in $(BUILD_DIR); libevent uses a stamp (library only)
+# Build outputs: executables in $(BUILD_DIR)
 BUILD_TARGETS := $(BUILD_DIR)/dhrystone \
                  $(BUILD_DIR)/sieve \
                  $(BUILD_DIR)/towers \
@@ -43,8 +43,6 @@ all-gem5: $(BUILD_TARGETS_GEM5)
 
 .PHONY: clean help init deinit all build/all all-pin all-gem5
 .PHONY: build/dhrystone run/dhrystone clean/dhrystone
-.PHONY: build/coremark clean/coremark
-.PHONY: build/libevent build/memcached run/memcached
 .PHONY: build/sieve run/sieve clean/sieve
 .PHONY: build/towers run/towers clean/towers
 .PHONY: build/branch_storm run/branch_storm clean/branch_storm
@@ -94,48 +92,6 @@ run/dhrystone: | build/dhrystone
 clean/dhrystone:
 	cd dhrystone && $(MAKE) clean
 	rm -f $(BUILD_DIR)/dhrystone $(BUILD_DIR)/dhrystone-pin $(BUILD_DIR)/dhrystone-gem5
-
-###########################################################
-# coremark
-###########################################################
-$(BUILD_DIR)/coremark:
-	cd coremark && $(MAKE) link
-	cp coremark/coremark $(BUILD_DIR)/ 2>/dev/null || cp coremark/coremark.exe $(BUILD_DIR)/coremark
-
-build/coremark: $(BUILD_DIR)/coremark
-
-run/coremark: build/coremark
-
-clean/coremark:
-	cd coremark && $(MAKE) clean
-	rm -f $(BUILD_DIR)/coremark
-
-###########################################################
-# memcached
-###########################################################
-$(BUILD_DEPS_DIR)/.libevent:
-	cd $(DEPS_DIR)/libevent && \
-	./autogen.sh && \
-	./configure --prefix=$$(pwd)/build && \
-	make && \
-	make install
-	@touch $@
-
-build/libevent: $(BUILD_DEPS_DIR)/.libevent
-
-$(BUILD_DIR)/memcached: $(BUILD_DEPS_DIR)/.libevent
-	cd memcached && \
-	./autogen.sh && \
-	./configure --with-libevent=$(DEPS_DIR)/libevent/build/ && \
-	make
-	cp memcached/memcached $(BUILD_DIR)/
-
-build/memcached: $(BUILD_DIR)/memcached
-
-run/memcached: | build/memcached
-	cd memcached && \
-	make test
-
 
 ###########################################################
 # sieve
