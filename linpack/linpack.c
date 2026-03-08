@@ -121,7 +121,7 @@ int main(void)
     printf("Average rolled and unrolled performance:\n\n");
     printf("    Reps Time(ms) DGEFA   DGESL  OVERHEAD    KFLOPS\n");
     printf("----------------------------------------------------\n");
-    nreps=1<<6;
+    nreps=1<<4;
     // while (linpack(nreps,arsize)<10.)
     //     nreps*=2;
     linpack(nreps,arsize);

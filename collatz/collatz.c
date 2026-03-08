@@ -10,6 +10,8 @@ void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 #include "gem5/m5ops.h"
 #endif
 
+#define START 10000000
+
 /* Does collatz starting from n,
    returns # of steps to get to
    1 -> 4 -> 2 -> 1 loop. */
@@ -33,7 +35,7 @@ int main(int argc, char* argv[]) {
 #ifdef GEM5
     m5_work_begin(0,0);
 #endif
-    int steps = collatz(27);
+    int steps = collatz(START);
     
     printf("Number of steps: %d\n", steps);
 #ifdef GEM5

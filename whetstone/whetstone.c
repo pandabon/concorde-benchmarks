@@ -115,7 +115,7 @@ main(int argc, char *argv[])
 	float duration_sec, KIPS;
 	int continuous;
 
-	loopstart = 100;		/* see the note about LOOP below */
+	loopstart = 50;		/* see the note about LOOP below */
 	continuous = 0;
 
 	II = 1;		/* start at the first arg (temp use of II here) */

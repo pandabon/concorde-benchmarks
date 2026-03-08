@@ -51,7 +51,7 @@ int main() {
 #endif
     // We don't need many iterations because the cache misses 
     // will make this incredibly slow.
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 7000; i++) {
         stress_icache();
     }
 #ifdef GEM5

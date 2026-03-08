@@ -12,7 +12,7 @@ void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 #include "gem5/m5ops.h"
 #endif
 
-#define N 10000
+#define N 30000
 
 int main(int argc, char* argv[]) {
 #ifdef PIN

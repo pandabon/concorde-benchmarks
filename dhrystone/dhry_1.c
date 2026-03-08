@@ -29,7 +29,7 @@ void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 #endif
 
 #ifndef DHRY_ITERS
-#define DHRY_ITERS 1000
+#define DHRY_ITERS 4000
 #endif
 
 /* Global Variables: */

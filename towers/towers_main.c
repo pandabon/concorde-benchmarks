@@ -30,7 +30,7 @@ void __attribute__((noinline)) end_trace(void)   { trace_region_marker = 0; }
 
 // This is the number of discs in the puzzle.
 
-#define NUM_DISCS  15
+#define NUM_DISCS  14
 
 //--------------------------------------------------------------------------
 // List data structure and functions

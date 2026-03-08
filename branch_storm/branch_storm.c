@@ -57,7 +57,7 @@ inline int get_rand() {
 #define RUN_BLOCK B_32(2) B_32(3) B_32(2) B_32(3)
 
 void heavy_branching() {
-    // This expands to 4096 individual if-else statements
+    // This expands to 128 individual if-else statements
     RUN_BLOCK
 }
 
@@ -81,8 +81,8 @@ int main(int argc, char *argv[]) {
     clock_t start = clock();
 
     // Run the loop enough times to stress the CPU
-    // 4096 branches * 50,000 iterations = ~200 Million Branches
-    for (int i = 0; i < 1000; i++) {
+    // 128 branches per iteration
+    for (int i = 0; i < 500; i++) {
         heavy_branching();
     }
     
