@@ -11,7 +11,7 @@ GEM5_OPTS = -I$(GEM5_INCLUDE) -DGEM5
 GEM5_LDFLAGS = $(GEM5_LIB)
 
 CC ?= gcc
-CFLAGS ?= -O2 -mno-sse -mno-avx -fno-tree-vectorize
+CFLAGS ?= -O2 -mno-avx -fno-tree-vectorize
 LDFLAGS ?= -lm
 
 whetstone_bin = whetstone
